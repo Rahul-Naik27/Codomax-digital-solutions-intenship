@@ -3,31 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog page</title>
+    <title>Blog | Codomax Internship</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <header>
       <nav>
-        <a href="index.html">Home</a>
-        <a href="blog.html">Blog</a>
+        <div class="logo">Codomax Intern</div>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="blog.html">Blog</a>
+        </div>
       </nav>
     </header>
+
     <main>
-      <h1>Blog</h1>
-      <article>
-        <h1>My First day as an intern</h1>
-        <p>
-          Set up my development environment and built my first Express server.
-        </p>
-      </article>
-      <article>
-        <h1>Learning HTML basics</h1>
-        <p>Practiced building structured pages using semantic HTML tags.</p>
-      </article>
+      <h1 class="page-title">Blog</h1>
+
+      <section class="blog-grid">
+        <article class="blog-card">
+          <h2>My First Day as an Intern</h2>
+          <p>
+            Set up my development environment and built my first Express server.
+          </p>
+          <button class="btn-secondary">Read More</button>
+        </article>
+
+        <article class="blog-card">
+          <h2>Learning HTML Basics</h2>
+          <p>Practiced building structured pages using semantic HTML tags.</p>
+          <button class="btn-secondary">Read More</button>
+        </article>
+
+        <article class="blog-card">
+          <h2>Styling with CSS</h2>
+          <p>
+            Learned how to design headers, forms, buttons, and cards for a
+            professional UI.
+          </p>
+          <button class="btn-secondary">Read More</button>
+        </article>
+      </section>
     </main>
+
     <footer>
       <p>&copy; 2026 Rahul | Codomax Digital Solutions Internship</p>
     </footer>
+
     <script src="js/script.js"></script>
   </body>
 </html>
