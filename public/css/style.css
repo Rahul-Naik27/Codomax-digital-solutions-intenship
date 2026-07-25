@@ -208,3 +208,32 @@ footer {
     font-size: 1.6rem;
   }
 }
+
+/* ===== Add Blog Form ===== */
+.add-blog-form {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 40px;
+}
+
+.add-blog-form h2 {
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+.error-message {
+  display: block;
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  min-height: 16px;
+}
+
+.blog-author {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-style: italic;
+  margin-bottom: 8px;
+}
