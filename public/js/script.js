@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (blogForm) {
     blogForm.addEventListener("submit", handleBlogSubmit);
 
-    // Real-time validation as user types
     document
       .getElementById("blogTitle")
       .addEventListener("input", () => validateTitle());
@@ -14,10 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .getElementById("blogContent")
       .addEventListener("input", () => validateContent());
+
+    // Load existing blogs from the backend when the page loads
+    loadBlogs();
   }
 });
 
-function handleBlogSubmit(e) {
+async function handleBlogSubmit(e) {
   e.preventDefault();
 
   const isTitleValid = validateTitle();
@@ -25,12 +27,62 @@ function handleBlogSubmit(e) {
   const isContentValid = validateContent();
 
   if (isTitleValid && isAuthorValid && isContentValid) {
-    addBlogCard();
-    document.getElementById("blogForm").reset();
-    clearAllErrors();
+    const title = document.getElementById("blogTitle").value.trim();
+    const author = document.getElementById("blogAuthor").value.trim();
+    const content = document.getElementById("blogContent").value.trim();
+
+    try {
+      const response = await fetch("/api/blogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, author, content }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add blog");
+      }
+
+      const data = await response.json();
+      console.log("Blog added:", data);
+
+      document.getElementById("blogForm").reset();
+      clearAllErrors();
+
+      // Reload blogs from server so the new one shows up
+      loadBlogs();
+    } catch (error) {
+      console.error("Error adding blog:", error);
+      alert("Something went wrong while adding the blog. Please try again.");
+    }
   }
 }
 
+// Fetch all blogs from the backend and render them
+async function loadBlogs() {
+  try {
+    const response = await fetch("/api/blogs");
+    const blogs = await response.json();
+
+    const blogGrid = document.querySelector(".blog-grid");
+    blogGrid.innerHTML = ""; // clear existing cards before re-rendering
+
+    blogs.forEach((blog) => {
+      const card = document.createElement("article");
+      card.classList.add("blog-card");
+      card.innerHTML = `
+        <h2>${blog.title}</h2>
+        <p class="blog-author">By ${blog.author}</p>
+        <p>${blog.content}</p>
+        <button class="btn-secondary">Read More</button>
+      `;
+      blogGrid.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Error loading blogs:", error);
+  }
+}
+
+// ===== Validation functions (unchanged from Day 4) =====
 function validateTitle() {
   const title = document.getElementById("blogTitle").value.trim();
   const errorEl = document.getElementById("titleError");
@@ -84,25 +136,4 @@ function clearAllErrors() {
   document
     .querySelectorAll(".error-message")
     .forEach((el) => (el.textContent = ""));
-}
-
-// Dynamically add a new blog card to the page after successful validation
-function addBlogCard() {
-  const title = document.getElementById("blogTitle").value.trim();
-  const author = document.getElementById("blogAuthor").value.trim();
-  const content = document.getElementById("blogContent").value.trim();
-
-  const blogGrid = document.querySelector(".blog-grid");
-
-  const card = document.createElement("article");
-  card.classList.add("blog-card");
-
-  card.innerHTML = `
-    <h2>${title}</h2>
-    <p class="blog-author">By ${author}</p>
-    <p>${content}</p>
-    <button class="btn-secondary">Read More</button>
-  `;
-
-  blogGrid.prepend(card);
 }
