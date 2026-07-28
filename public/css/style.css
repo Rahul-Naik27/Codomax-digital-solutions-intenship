@@ -237,3 +237,33 @@ footer {
   font-style: italic;
   margin-bottom: 8px;
 }
+
+.home-blogs {
+  margin-bottom: 40px;
+}
+
+.home-blogs h2 {
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+.blog-card p {
+  color: #4b5563;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.blog-card {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  overflow: hidden;
+  overflow-wrap: break-word;
+}

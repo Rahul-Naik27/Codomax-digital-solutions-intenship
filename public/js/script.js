@@ -13,10 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document
       .getElementById("blogContent")
       .addEventListener("input", () => validateContent());
-
-    // Load existing blogs from the backend when the page loads
-    loadBlogs();
   }
+
+  // Load blogs on any page that has a blog grid (home or blog page)
+  loadBlogs();
 });
 
 async function handleBlogSubmit(e) {
@@ -58,15 +58,25 @@ async function handleBlogSubmit(e) {
 }
 
 // Fetch all blogs from the backend and render them
+// Works on both Home page (#homeBlogGrid) and Blog page (.blog-grid)
 async function loadBlogs() {
+  const homeGrid = document.getElementById("homeBlogGrid");
+  const blogPageGrid = document.querySelector(".blog-grid:not(#homeBlogGrid)");
+
+  const targetGrid = homeGrid || blogPageGrid;
+
+  if (!targetGrid) return; // no blog grid on this page, do nothing
+
   try {
     const response = await fetch("/api/blogs");
     const blogs = await response.json();
 
-    const blogGrid = document.querySelector(".blog-grid");
-    blogGrid.innerHTML = ""; // clear existing cards before re-rendering
+    targetGrid.innerHTML = ""; // clear existing cards before re-rendering
 
-    blogs.forEach((blog) => {
+    // On Home page, show only the latest 3 posts as a preview
+    const blogsToShow = homeGrid ? blogs.slice(-3).reverse() : blogs;
+
+    blogsToShow.forEach((blog) => {
       const card = document.createElement("article");
       card.classList.add("blog-card");
       card.innerHTML = `
@@ -75,7 +85,7 @@ async function loadBlogs() {
         <p>${blog.content}</p>
         <button class="btn-secondary">Read More</button>
       `;
-      blogGrid.appendChild(card);
+      targetGrid.appendChild(card);
     });
   } catch (error) {
     console.error("Error loading blogs:", error);
