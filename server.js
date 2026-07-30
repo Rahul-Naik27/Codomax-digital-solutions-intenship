@@ -26,6 +26,8 @@ let blogs = [
   },
 ];
 
+let nextId = 3; // tracks the next available id, independent of array length
+
 // ===== GET route: fetch all blogs =====
 app.get("/api/blogs", (req, res) => {
   res.json(blogs);
@@ -53,7 +55,7 @@ app.post("/api/blogs", (req, res) => {
   }
 
   const newBlog = {
-    id: blogs.length + 1,
+    id: nextId++, // ← changed this line
     title,
     author,
     content,
@@ -85,6 +87,20 @@ app.put("/api/blogs/:id", (req, res) => {
   blog.content = content;
 
   res.json({ message: "Blog updated successfully", blog });
+});
+
+// ===== DELETE route: remove a blog =====
+app.delete("/api/blogs/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const blogIndex = blogs.findIndex((b) => b.id === id);
+
+  if (blogIndex === -1) {
+    return res.status(404).json({ message: "Blog not found" });
+  }
+
+  const deletedBlog = blogs.splice(blogIndex, 1);
+
+  res.json({ message: "Blog deleted successfully", blog: deletedBlog[0] });
 });
 
 app.listen(PORT, () => {

@@ -76,10 +76,13 @@ async function loadBlogs() {
       const card = document.createElement("article");
       card.classList.add("blog-card");
 
-      // Only show Edit button on the Blog page, not the Home preview
+      // Only show Edit and delete button on the Blog page, not the Home preview
       const editButton = homeGrid
         ? ""
         : `<button class="btn-secondary edit-btn" data-id="${blog.id}">Edit</button>`;
+      const deleteButton = homeGrid
+        ? ""
+        : `<button class="btn-danger delete-btn" data-id="${blog.id}">Delete</button>`;
 
       card.innerHTML = `
         <h2>${blog.title}</h2>
@@ -88,6 +91,7 @@ async function loadBlogs() {
         <div class="blog-card-actions">
           <button class="btn-secondary">Read More</button>
           ${editButton}
+          ${deleteButton}
         </div>
       `;
       targetGrid.appendChild(card);
@@ -99,8 +103,33 @@ async function loadBlogs() {
         openEditModal(btn.dataset.id, blogsToShow),
       );
     });
+    // Attach click listeners to all delete buttons
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", () => handleDeleteBlog(btn.dataset.id));
+    });
   } catch (error) {
     console.error("Error loading blogs:", error);
+  }
+}
+
+async function handleDeleteBlog(id) {
+  const confirmDelete = confirm(
+    "Are you sure you want to delete this blog post?",
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    const response = await fetch(`/api/blogs/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) throw new Error("Failed to delete blog");
+
+    loadBlogs();
+  } catch (error) {
+    console.error("Error deleting blog:", error);
+    alert("Something went wrong while deleting the blog.");
   }
 }
 
