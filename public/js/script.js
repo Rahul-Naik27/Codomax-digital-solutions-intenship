@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (blogForm) {
     blogForm.addEventListener("submit", handleBlogSubmit);
-
     document
       .getElementById("blogTitle")
       .addEventListener("input", () => validateTitle());
@@ -15,7 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
       .addEventListener("input", () => validateContent());
   }
 
-  // Load blogs on any page that has a blog grid (home or blog page)
+  const editForm = document.getElementById("editForm");
+  if (editForm) {
+    editForm.addEventListener("submit", handleEditSubmit);
+    document
+      .getElementById("cancelEdit")
+      .addEventListener("click", closeEditModal);
+  }
+
   loadBlogs();
 });
 
@@ -38,17 +44,10 @@ async function handleBlogSubmit(e) {
         body: JSON.stringify({ title, author, content }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to add blog");
-      }
-
-      const data = await response.json();
-      console.log("Blog added:", data);
+      if (!response.ok) throw new Error("Failed to add blog");
 
       document.getElementById("blogForm").reset();
       clearAllErrors();
-
-      // Reload blogs from server so the new one shows up
       loadBlogs();
     } catch (error) {
       console.error("Error adding blog:", error);
@@ -57,46 +56,107 @@ async function handleBlogSubmit(e) {
   }
 }
 
-// Fetch all blogs from the backend and render them
-// Works on both Home page (#homeBlogGrid) and Blog page (.blog-grid)
+// ===== Load blogs (Home or Blog page) =====
 async function loadBlogs() {
   const homeGrid = document.getElementById("homeBlogGrid");
   const blogPageGrid = document.querySelector(".blog-grid:not(#homeBlogGrid)");
-
   const targetGrid = homeGrid || blogPageGrid;
 
-  if (!targetGrid) return; // no blog grid on this page, do nothing
+  if (!targetGrid) return;
 
   try {
     const response = await fetch("/api/blogs");
     const blogs = await response.json();
 
-    targetGrid.innerHTML = ""; // clear existing cards before re-rendering
+    targetGrid.innerHTML = "";
 
-    // On Home page, show only the latest 3 posts as a preview
     const blogsToShow = homeGrid ? blogs.slice(-3).reverse() : blogs;
 
     blogsToShow.forEach((blog) => {
       const card = document.createElement("article");
       card.classList.add("blog-card");
+
+      // Only show Edit button on the Blog page, not the Home preview
+      const editButton = homeGrid
+        ? ""
+        : `<button class="btn-secondary edit-btn" data-id="${blog.id}">Edit</button>`;
+
       card.innerHTML = `
         <h2>${blog.title}</h2>
         <p class="blog-author">By ${blog.author}</p>
         <p>${blog.content}</p>
-        <button class="btn-secondary">Read More</button>
+        <div class="blog-card-actions">
+          <button class="btn-secondary">Read More</button>
+          ${editButton}
+        </div>
       `;
       targetGrid.appendChild(card);
+    });
+
+    // Attach click listeners to all Edit buttons
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+      btn.addEventListener("click", () =>
+        openEditModal(btn.dataset.id, blogsToShow),
+      );
     });
   } catch (error) {
     console.error("Error loading blogs:", error);
   }
 }
 
-// ===== Validation functions (unchanged from Day 4) =====
+// ===== Open edit modal and pre-fill with existing data =====
+function openEditModal(id, blogs) {
+  const blog = blogs.find((b) => b.id === parseInt(id));
+  if (!blog) return;
+
+  document.getElementById("editBlogId").value = blog.id;
+  document.getElementById("editTitle").value = blog.title;
+  document.getElementById("editAuthor").value = blog.author;
+  document.getElementById("editContent").value = blog.content;
+
+  document.getElementById("editModal").classList.remove("hidden");
+}
+
+function closeEditModal() {
+  document.getElementById("editModal").classList.add("hidden");
+  document.getElementById("editForm").reset();
+}
+
+// ===== Submit edited blog to backend =====
+async function handleEditSubmit(e) {
+  e.preventDefault();
+
+  const id = document.getElementById("editBlogId").value;
+  const title = document.getElementById("editTitle").value.trim();
+  const author = document.getElementById("editAuthor").value.trim();
+  const content = document.getElementById("editContent").value.trim();
+
+  if (!title || !author || !content) {
+    alert("All fields are required.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/blogs/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, author, content }),
+    });
+
+    if (!response.ok) throw new Error("Failed to update blog");
+
+    closeEditModal();
+    loadBlogs();
+  } catch (error) {
+    console.error("Error updating blog:", error);
+    alert("Something went wrong while updating the blog.");
+  }
+}
+
+// ===== Validation functions (unchanged) =====
 function validateTitle() {
   const title = document.getElementById("blogTitle").value.trim();
   const errorEl = document.getElementById("titleError");
-
   if (title === "") {
     errorEl.textContent = "Title is required.";
     return false;
@@ -113,7 +173,6 @@ function validateAuthor() {
   const author = document.getElementById("blogAuthor").value.trim();
   const errorEl = document.getElementById("authorError");
   const nameRegex = /^[A-Za-z\s]+$/;
-
   if (author === "") {
     errorEl.textContent = "Author name is required.";
     return false;
@@ -129,7 +188,6 @@ function validateAuthor() {
 function validateContent() {
   const content = document.getElementById("blogContent").value.trim();
   const errorEl = document.getElementById("contentError");
-
   if (content === "") {
     errorEl.textContent = "Content is required.";
     return false;

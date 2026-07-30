@@ -63,6 +63,41 @@
       <section class="blog-grid">
         <!-- Blog cards are loaded dynamically from the backend via script.js -->
       </section>
+
+      <!-- Edit Blog Modal -->
+      <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+          <h2>Edit Blog Post</h2>
+          <form id="editForm" novalidate>
+            <input type="hidden" id="editBlogId" />
+
+            <div class="form-group">
+              <label for="editTitle">Title</label>
+              <input type="text" id="editTitle" name="editTitle" />
+              <span class="error-message" id="editTitleError"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="editAuthor">Author</label>
+              <input type="text" id="editAuthor" name="editAuthor" />
+              <span class="error-message" id="editAuthorError"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="editContent">Content</label>
+              <textarea id="editContent" name="editContent" rows="4"></textarea>
+              <span class="error-message" id="editContentError"></span>
+            </div>
+
+            <div class="modal-actions">
+              <button type="submit" class="btn-primary">Save Changes</button>
+              <button type="button" class="btn-secondary" id="cancelEdit">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </main>
 
     <footer>

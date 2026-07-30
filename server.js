@@ -63,6 +63,30 @@ app.post("/api/blogs", (req, res) => {
   res.status(201).json({ message: "Blog added successfully", blog: newBlog });
 });
 
+// ===== PUT route: update an existing blog =====
+app.put("/api/blogs/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const { title, author, content } = req.body;
+
+  const blog = blogs.find((b) => b.id === id);
+
+  if (!blog) {
+    return res.status(404).json({ message: "Blog not found" });
+  }
+
+  if (!title || !author || !content) {
+    return res
+      .status(400)
+      .json({ message: "Title, author, and content are required." });
+  }
+
+  blog.title = title;
+  blog.author = author;
+  blog.content = content;
+
+  res.json({ message: "Blog updated successfully", blog });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
