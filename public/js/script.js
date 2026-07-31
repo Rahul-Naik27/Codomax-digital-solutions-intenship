@@ -109,6 +109,10 @@ async function loadBlogs() {
     });
   } catch (error) {
     console.error("Error loading blogs:", error);
+    if (targetGrid) {
+      targetGrid.innerHTML =
+        "<p>Unable to load blogs. Please check if the server is running.</p>";
+    }
   }
 }
 
