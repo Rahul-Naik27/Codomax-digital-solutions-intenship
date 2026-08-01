@@ -3,81 +3,271 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home | Codomax Internship</title>
+    <meta name="description" content="Codomax Digital Solutions Internship Portal - High performance web applications and technical blog post engineering." />
+    <title>Codomax Internship Portal | Engineering & Web Solutions</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <header>
-      <nav>
-        <div class="logo">Codomax Intern</div>
+    <!-- Background Glow Blobs -->
+    <div class="bg-glow blob-1"></div>
+    <div class="bg-glow blob-2"></div>
+
+    <header class="site-header">
+      <nav class="nav-container">
+        <a href="index.html" class="logo">
+          <div class="logo-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+          </div>
+          <span>Codomax<span class="logo-accent">Intern</span></span>
+        </a>
+
         <div class="nav-links">
-          <a href="index.html">Home</a>
-          <a href="blog.html">Blog</a>
+          <a href="index.html" class="nav-link active">Home</a>
+          <a href="blog.html" class="nav-link">Blog & Insights</a>
+          <a href="#contact" class="nav-link">Contact</a>
+          <a href="blog.html" class="btn-nav-primary">Explore Articles</a>
         </div>
+
+        <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
+          <svg class="icon-menu" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
       </nav>
+      <!-- Mobile Nav Drawer -->
+      <div class="mobile-nav-drawer" id="mobileNavDrawer">
+        <a href="index.html" class="mobile-nav-link active">Home</a>
+        <a href="blog.html" class="mobile-nav-link">Blog & Insights</a>
+        <a href="#contact" class="mobile-nav-link">Contact</a>
+      </div>
     </header>
 
     <main>
-      <section class="hero">
-        <h1>Welcome to My Internship Project</h1>
-        <p>
-          This is the Home page, built as part of the Codomax Digital Solutions
-          Full Stack Internship.
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          <span>Codomax Digital Solutions Internship 2026</span>
+        </div>
+        <h1 class="hero-title">
+          Building Next-Gen Web Solutions & <span class="gradient-text">Full-Stack Insights</span>
+        </h1>
+        <p class="hero-description">
+          A showcase portal built during the Codomax Digital Solutions engineering program, featuring RESTful API integration, dynamic client-side rendering, and production-grade UI design.
         </p>
-        <button class="btn-primary">Learn More</button>
-      </section>
 
-      <section class="home-blogs">
-        <h2>Latest Blog Posts</h2>
-        <div class="blog-grid" id="homeBlogGrid">
-          <!-- Blog cards loaded dynamically via script.js -->
+        <div class="hero-actions">
+          <a href="blog.html" class="btn-primary">
+            <span>Browse All Blogs</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="#features" class="btn-secondary">
+            <span>Learn Architecture</span>
+          </a>
+        </div>
+
+        <!-- Key Metrics Banner -->
+        <div class="stats-banner">
+          <div class="stat-card">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">REST API Integration</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">RESTful</div>
+            <div class="stat-label">Express 5 CRUD Operations</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">&lt;50ms</div>
+            <div class="stat-label">Lightning Fast Response</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">4.9★</div>
+            <div class="stat-label">Internship Score</div>
+          </div>
         </div>
       </section>
 
-      <section class="contact-form">
-        <h2>Get in Touch</h2>
-        <form>
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Enter your name"
-              required
-            />
+      <!-- Highlights / Features Grid -->
+      <section class="features-section" id="features">
+        <div class="section-header">
+          <span class="section-tag font-accent">Core Stack Architecture</span>
+          <h2 class="section-title">Designed for Performance & Scalability</h2>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon icon-blue">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10"/><path d="M7 12h10"/><path d="M7 16h6"/></svg>
+            </div>
+            <h3>RESTful Express Backend</h3>
+            <p>Complete backend server using Express 5 for handling GET, POST, PUT, PATCH, and DELETE operations cleanly.</p>
           </div>
 
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              required
-            />
+          <div class="feature-card">
+            <div class="feature-icon icon-purple">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </div>
+            <h3>Pure Modern CSS</h3>
+            <p>Custom design token architecture with dark-slate themes, glassmorphic card overlays, and fluid responsive grids.</p>
           </div>
 
-          <div class="form-group">
-            <label for="message">Message</label>
-            <textarea
-              id="message"
-              name="message"
-              rows="4"
-              placeholder="Your message"
-            ></textarea>
+          <div class="feature-card">
+            <div class="feature-icon icon-emerald">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <h3>Interactive Client Logic</h3>
+            <p>Real-time search filtering, tag navigation, post read modals, like interactions, and toast notification feedback.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Home Latest Blogs Preview -->
+      <section class="home-blogs">
+        <div class="section-header-flex">
+          <div>
+            <span class="section-tag font-accent">Latest Insights</span>
+            <h2 class="section-title">Recent Technical Posts</h2>
+          </div>
+          <a href="blog.html" class="link-with-icon">
+            <span>View All Articles</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="blog-grid" id="homeBlogGrid">
+          <!-- Dynamic skeleton cards or JS content will render here -->
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </section>
+
+      <!-- Modern Contact Form Section -->
+      <section class="contact-section" id="contact">
+        <div class="contact-container">
+          <div class="contact-info">
+            <span class="section-tag font-accent">Connect With Us</span>
+            <h2 class="contact-title">Have Questions or Ideas? Let's Collaborate.</h2>
+            <p class="contact-desc">
+              Reach out to learn more about the engineering work conducted at Codomax Digital Solutions or to collaborate on web projects.
+            </p>
+
+            <div class="contact-details">
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div>
+                  <strong>Phone</strong>
+                  <p>+91 (800) 123-4567</p>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <div>
+                  <strong>Email</strong>
+                  <p>internship@codomaxdigital.com</p>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div>
+                  <strong>Location</strong>
+                  <p>Codomax Digital Solutions Tech Hub</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <button type="submit" class="btn-primary">Send Message</button>
-        </form>
+          <div class="contact-form-wrapper">
+            <form id="contactForm" novalidate>
+              <h3 class="form-title">Send a Message</h3>
+
+              <div class="form-group">
+                <label for="name">Your Name</label>
+                <div class="input-with-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <input type="text" id="name" name="name" placeholder="Rahul Naik" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-with-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  <input type="email" id="email" name="email" placeholder="rahul@example.com" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" rows="4" placeholder="Hello, I would like to learn more about the internship project..." required></textarea>
+              </div>
+
+              <button type="submit" class="btn-primary btn-block" id="contactSubmitBtn">
+                <span>Send Message</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </form>
+          </div>
+        </div>
       </section>
     </main>
 
-    <footer>
-      <p>&copy; 2026 Rahul | Codomax Digital Solutions Internship</p>
+    <!-- Site Footer -->
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="logo">
+            <div class="logo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+            </div>
+            <span>Codomax<span class="logo-accent">Intern</span></span>
+          </div>
+          <p class="footer-tagline">Crafting modern web applications with express, pure CSS, and full-stack excellence.</p>
+        </div>
+
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Navigation</h4>
+            <a href="index.html">Home</a>
+            <a href="blog.html">Blog Posts</a>
+            <a href="#features">Architecture</a>
+          </div>
+
+          <div class="footer-col">
+            <h4>Technology</h4>
+            <a href="#">Node.js & Express</a>
+            <a href="#">Vanilla JavaScript</a>
+            <a href="#">CSS Glassmorphism</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Rahul Naik | Codomax Digital Solutions Internship</p>
+        <div class="server-status-badge">
+          <span class="status-indicator online"></span>
+          <span>Express Server Online</span>
+        </div>
+      </div>
     </footer>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <script src="js/script.js"></script>
   </body>
 </html>
+
