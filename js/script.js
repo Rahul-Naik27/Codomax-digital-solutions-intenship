@@ -91,8 +91,21 @@ function initMobileMenu() {
   const drawer = document.getElementById("mobileNavDrawer");
 
   if (menuBtn && drawer) {
-    menuBtn.addEventListener("click", () => {
+    menuBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       drawer.classList.toggle("open");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!menuBtn.contains(e.target) && !drawer.contains(e.target)) {
+        drawer.classList.remove("open");
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 868) {
+        drawer.classList.remove("open");
+      }
     });
   }
 }
