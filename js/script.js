@@ -7,6 +7,75 @@ let currentCategory = "All";
 let currentSearchQuery = "";
 let postToDeleteId = null;
 let currentReadingPost = null;
+let isStaticMode = false;
+
+const DEFAULT_BLOGS = [
+  {
+    id: 1,
+    title: "Mastering Full Stack Development: My Internship Experience at Codomax",
+    author: "Rahul Naik",
+    authorAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+    category: "Internship",
+    coverImage: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
+    readTime: "5 min read",
+    date: "Aug 1, 2026",
+    likes: 24,
+    content: "Setting up my production-grade Node.js and Express development environment marked day one of my journey at Codomax Digital Solutions. During this internship, I built RESTful APIs, designed responsive UIs, and learned how modern full-stack architectures handle scalable web requests smoothly.",
+  },
+  {
+    id: 2,
+    title: "Modern UI/UX Design System with Pure CSS and Glassmorphism",
+    author: "Sophia Chen",
+    authorAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80",
+    category: "Design",
+    coverImage: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
+    readTime: "4 min read",
+    date: "Jul 28, 2026",
+    likes: 38,
+    content: "Building beautiful user interfaces without relying on heavy frontend frameworks requires a solid CSS design system. By establishing custom color tokens, modern typography standards, and glassmorphic backdrop filters, we can craft web apps that look incredible while maintaining blazing fast loading speeds.",
+  },
+  {
+    id: 3,
+    title: "Building Scalable REST APIs in Node.js & Express 5",
+    author: "Alex Morgan",
+    authorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80",
+    category: "Web Dev",
+    coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
+    readTime: "6 min read",
+    date: "Jul 22, 2026",
+    likes: 42,
+    content: "Express 5 introduces asynchronous route handling improvements and stricter parameter handling. In this article, we break down best practices for API architecture, standardizing middleware validation, error propagation, and structured JSON responses for production applications.",
+  },
+  {
+    id: 4,
+    title: "The Rise of AI-Assisted Software Engineering",
+    author: "Rahul Naik",
+    authorAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80",
+    category: "AI & Tech",
+    coverImage: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+    readTime: "7 min read",
+    date: "Jul 15, 2026",
+    likes: 56,
+    content: "Artificial intelligence tools like LLM coding agents are rapidly reshaping how developers solve problems. From automated code refactoring to instant bug detection, smart AI assistants allow engineers to focus on architectural decisions while boosting efficiency dramatically.",
+  }
+];
+
+function getStoredBlogs() {
+  const data = localStorage.getItem("codomax_blogs");
+  if (data) {
+    try {
+      return JSON.parse(data);
+    } catch (e) {
+      console.error("Failed to parse localStorage blogs", e);
+    }
+  }
+  localStorage.setItem("codomax_blogs", JSON.stringify(DEFAULT_BLOGS));
+  return DEFAULT_BLOGS;
+}
+
+function saveStoredBlogs(blogs) {
+  localStorage.setItem("codomax_blogs", JSON.stringify(blogs));
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   initMobileMenu();
@@ -174,7 +243,7 @@ function initModalBackdrops() {
   if (deleteBackdrop) deleteBackdrop.addEventListener("click", closeDeleteModal);
 }
 
-// ===== Load Blogs from Backend Server =====
+// ===== Load Blogs from Backend Server or Local Storage Fallback =====
 async function loadBlogs() {
   const homeGrid = document.getElementById("homeBlogGrid");
   const blogPageGrid = document.getElementById("blogPageGrid");
@@ -184,22 +253,17 @@ async function loadBlogs() {
 
   try {
     const response = await fetch("/api/blogs");
-    if (!response.ok) throw new Error("Failed to load blog posts from API");
+    if (!response.ok) throw new Error("API unavailable");
     
     allBlogsCache = await response.json();
-    renderFilteredBlogs();
+    isStaticMode = false;
   } catch (error) {
-    console.error("Error loading blogs:", error);
-    showToast("Unable to connect to Express backend server.", "error");
-    if (targetGrid) {
-      targetGrid.innerHTML = `
-        <div class="no-results-state">
-          <h3>Failed to load articles</h3>
-          <p>Please make sure the Node.js server is running on port 3000.</p>
-        </div>
-      `;
-    }
+    console.log("Running in static mode (localStorage fallback for GitHub Pages)");
+    isStaticMode = true;
+    allBlogsCache = getStoredBlogs();
   }
+
+  renderFilteredBlogs();
 }
 
 // ===== Filter & Render Blogs on Page =====
@@ -370,6 +434,42 @@ async function handleBlogSubmit(e) {
     const coverImage = document.getElementById("blogCover").value.trim();
     const content = document.getElementById("blogContent").value.trim();
 
+    if (isStaticMode) {
+      const blogs = getStoredBlogs();
+      const newId = blogs.length > 0 ? Math.max(...blogs.map((b) => b.id)) + 1 : 1;
+      const wordCount = content.split(/\s+/).filter(Boolean).length;
+      const readTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
+      const formattedDate = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      const defaultAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(author)}`;
+
+      const newBlog = {
+        id: newId,
+        title,
+        author,
+        authorAvatar: defaultAvatar,
+        category: category || "General",
+        coverImage: coverImage || "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
+        readTime: `${readTimeMinutes} min read`,
+        date: formattedDate,
+        likes: 0,
+        content,
+      };
+
+      blogs.push(newBlog);
+      saveStoredBlogs(blogs);
+      allBlogsCache = blogs;
+      showToast("Article published successfully!", "success");
+
+      document.getElementById("blogForm").reset();
+      clearAllErrors();
+
+      const addBlogSection = document.getElementById("addBlogSection");
+      if (addBlogSection) addBlogSection.classList.add("hidden");
+
+      renderFilteredBlogs();
+      return;
+    }
+
     try {
       const response = await fetch("/api/blogs", {
         method: "POST",
@@ -472,6 +572,27 @@ async function handleEditSubmit(e) {
     return;
   }
 
+  if (isStaticMode) {
+    const blogs = getStoredBlogs();
+    const blogIndex = blogs.findIndex((b) => b.id === parseInt(id));
+    if (blogIndex !== -1) {
+      blogs[blogIndex] = {
+        ...blogs[blogIndex],
+        title,
+        author,
+        category: category || "General",
+        coverImage: coverImage || blogs[blogIndex].coverImage,
+        content,
+      };
+      saveStoredBlogs(blogs);
+      allBlogsCache = blogs;
+      showToast("Blog post updated successfully!", "success");
+      closeEditModal();
+      renderFilteredBlogs();
+    }
+    return;
+  }
+
   try {
     const response = await fetch(`/api/blogs/${id}`, {
       method: "PUT",
@@ -506,6 +627,17 @@ function closeDeleteModal() {
 async function executeBlogDelete() {
   if (!postToDeleteId) return;
 
+  if (isStaticMode) {
+    let blogs = getStoredBlogs();
+    blogs = blogs.filter((b) => b.id !== parseInt(postToDeleteId));
+    saveStoredBlogs(blogs);
+    allBlogsCache = blogs;
+    showToast("Blog post deleted successfully.", "info");
+    closeDeleteModal();
+    renderFilteredBlogs();
+    return;
+  }
+
   try {
     const response = await fetch(`/api/blogs/${postToDeleteId}`, {
       method: "DELETE",
@@ -524,6 +656,19 @@ async function executeBlogDelete() {
 
 // ===== Like Toggling (PATCH) =====
 async function toggleLike(id) {
+  if (isStaticMode) {
+    const blogs = getStoredBlogs();
+    const blog = blogs.find((b) => b.id === parseInt(id));
+    if (blog) {
+      blog.likes = (blog.likes || 0) + 1;
+      saveStoredBlogs(blogs);
+      allBlogsCache = blogs;
+      renderFilteredBlogs();
+      showToast("Liked post! ❤️", "info");
+    }
+    return;
+  }
+
   try {
     const response = await fetch(`/api/blogs/${id}/like`, {
       method: "PATCH",
